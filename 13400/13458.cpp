@@ -1,6 +1,4 @@
 #include <iostream>
-#include <vector>
-#include <deque>
 using namespace std;
 long long arr[1000000];
 long long n;
@@ -8,11 +6,11 @@ long long a, b;
 long long num = 0;
 int main()
 {
-	scanf("%d", &n);
+	cin >> n;
 	for (int i = 0; i < n; i++) {
-		scanf("%d", &arr[i]);
+		cin >> arr[i];
 	}
-	scanf("%d %d", &a, &b);
+	cin >> a >> b;
 	for (int i = 0; i < n; i++) {
 		arr[i] -= a;
 		if (arr[i] < 0) {
@@ -23,6 +21,6 @@ int main()
 		}
 		num += arr[i] / b;
 	}
-	printf("%d", num+n);
+	cout << num + n;
 	return 0;
 }
