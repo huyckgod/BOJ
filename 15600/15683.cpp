@@ -2,12 +2,7 @@
 #include<vector>
 using namespace std;
 int minnum = 10000000;
-int dir[4][2] = {
-	{0,-1},
-	{1,0},
-	{0,1},
-	{-1,0}
-};
+int dir[4][2] = {{0,-1},{1,0},{0,1},{-1,0}};
 vector<vector<int>> map(8, vector<int>(8, 0));
 vector<vector<int>> v;
 int a, b;
@@ -16,7 +11,7 @@ vector<vector<int>> move(int x, int y, int d, vector<vector<int>> map) {
 		if (map[y][x] == 0) {
 			map[y][x] = 7;
 		}
-		if (y + dir[d][1] == -1 || y + dir[d][1] == a || x + dir[d][0] == -1 || x + dir[d][0] == b|| map[y + dir[d][1]][x + dir[d][0]] == 6) {
+		if (y + dir[d][1] == -1 || y + dir[d][1] == a || x + dir[d][0] == -1 || x + dir[d][0] == b || map[y + dir[d][1]][x + dir[d][0]] == 6) {
 			break;
 		}
 		x += dir[d][0];
@@ -25,7 +20,7 @@ vector<vector<int>> move(int x, int y, int d, vector<vector<int>> map) {
 	return map;
 }
 void sol(int x, int y, int dep, int t, vector<vector<int>> map) {
-	if (v.size()-1 == dep) {
+	if (v.size() - 1 == dep) {
 		int num = 0;
 		for (int i = 0; i < a; i++) {
 			for (int j = 0; j < b; j++) {
@@ -80,7 +75,7 @@ int main()
 			}
 		}
 	}
-	v.push_back(vector<int>(3,0));
+	v.push_back(vector<int>(3, 0));
 	sol(v[0][1], v[0][0], 0, v[0][2], map);
 	cout << minnum;
 }
