@@ -37,10 +37,17 @@ int main()
 		cin >> n >> d;
 		sol(n, d, -1);
 	}
-	for (int i = 1; i < 5; i++) {
-		if (gear[i][0] == 1) {
-			num += 2^(i-1);
-		}
+	if (gear[1][0] == 1) {
+		num += 1;
+	}
+	if (gear[2][0] == 1) {
+		num += 2;
+	}
+	if (gear[3][0] == 1) {
+		num += 4;
+	}
+	if (gear[4][0] == 1) {
+		num += 8;
 	}
 	cout << num;
 }
