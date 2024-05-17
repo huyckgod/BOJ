@@ -1,128 +1,128 @@
 #include <iostream>
-#include <queue>
 #include <vector>
-#define max_int 100
-#define max_val 401
+#include <algorithm>
 
 using namespace std;
 
-vector<vector<int>> shark;
-int result = 0, R, C, M;
+int R,C,M;
+int dx[5] = {0, 0, 0, 1, -1}; 
+int dy[5] = {0, -1, 1, 0, 0};
+int answer = 0;
 
-int dx[] = {0, 0, 0, 1, -1};
-int dy[] = {0, -1, 1, 0, 0};
-
-int map[max_int][max_int][6] = {0};
-int main()
+struct shark
 {
-    cin >> R >> C >> M;
-    if(M ==0){
-        cout << result;
-        return 0;
-    }
-    for (int i = 0; i < M; i++)
-    {
-        shark.push_back(vector<int>());
-    }
-    for (int i = 0; i < M; i++)
-    {
-        int r, c, s, d, z;
-        cin >> r >> c >> s >> d >> z;
-        shark[i].push_back(r - 1);
-        shark[i].push_back(c - 1);
-        shark[i].push_back(s);
-        shark[i].push_back(d);
-        shark[i].push_back(z);
-    }
-    for (int i = 0; i < C; i++)
-    {
-        int del[M];
-        int delcnt = 0;
-        for (int j = 0; j < M; j++)
-        {
-            if (shark[j][4] != 0)
-            {
-                if (map[shark[j][0]][shark[j][1]][4] != 0)
-                {
-                    if (map[shark[j][0]][shark[j][1]][4] < shark[j][4])
-                    {
-                        map[shark[j][0]][shark[j][1]][0] = shark[j][0];
-                        map[shark[j][0]][shark[j][1]][1] = shark[j][1];
-                        map[shark[j][0]][shark[j][1]][4] = shark[j][4];
-                        shark[map[shark[j][0]][shark[j][1]][5]][4] = 0;
-                    }
-                    else
-                    {
-                        shark[j][4] = 0;
-                    }
-                }
-                else
-                {
-                    map[shark[j][0]][shark[j][1]][0] = shark[j][0];
-                    map[shark[j][0]][shark[j][1]][1] = shark[j][1];
-                    map[shark[j][0]][shark[j][1]][4] = shark[j][4];
-                    map[shark[j][0]][shark[j][1]][5] = j;
-                }
-            }
-        }
-        for (int j = 0; j < R; j++)
-        {
-            if (map[j][i][4] != 0)
-            {
-                result += map[j][i][4];
-                map[j][i][0] = 0;
-                map[j][i][1] = 0;
-                map[j][i][4] = 0;
-                shark[map[j][i][5]][4] = 0;
-                map[j][i][5] = 0;
-                break;
-            }
-        }
-        for (int j = 0; j < M; j++)
-        {
-            if (shark[j][4] != 0)
-            {
-                for (int k = 0; k < shark[j][2]; k++)
-                {
-                    shark[j][1] += dx[shark[j][3]];
-                    shark[j][0] += dy[shark[j][3]];
-                    if (shark[j][1] > C - 1 || shark[j][0] > R - 1)
-                    {
-                        if (shark[j][1] > C - 1)
-                        {
-                            shark[j][1] = C - 2;
-                            shark[j][3] = 4;
-                        }
-                        else if (shark[j][0] > R - 1)
-                        {
-                            shark[j][0] = R - 2;
-                            shark[j][3] = 1;
-                        }
-                    }
-                    if (shark[j][1] < 0 || shark[j][0] < 0)
-                    {
-                        if (shark[j][1] < 0)
-                        {
-                            shark[j][1] = 1;
-                            shark[j][3] = 3;
-                        }
-                        else if (shark[j][0] < 0)
-                        {
-                            shark[j][0] = 1;
-                            shark[j][3] = 2;
-                        }
-                    }
-                }
-            }
-        }
-        for (int k = 0; k < R; k++)
-        {
-            for (int t = 0; t < C; t++)
-            {
-                map[k][t][4] = 0;
-            }
-        }
-    }
-    cout << result;
-    return 0;
+    int r;
+    int c;
+    int s;
+    int d;
+    int z;
+    int a;
+};
+
+int main() {
+   ios::sync_with_stdio(0);
+   cin.tie(0);
+   
+   vector<shark> sharks;
+   
+   
+   int target = -1;
+   
+   cin >> R >> C >> M;
+   
+   for(int i = 0 ; i < M; i++)
+   {
+       shark ss;
+       
+       cin >> ss.r >> ss.c >> ss.s >> ss.d >> ss.z;
+       ss.a = 1;
+       
+       
+       if(ss.c == 1)
+       {
+           if(target == -1)
+               target = i;
+           else if(sharks[target].r > ss.r)
+               target = i;
+       }
+       
+       sharks.push_back(ss);
+   }
+   
+   for(int i = 1 ; i<=C;i++)
+   {
+       if(target != -1)
+       {
+           sharks[target].a = 0;
+           answer += sharks[target].z;
+           target = -1;
+       }
+       
+        vector<vector<int>> map(101, vector<int>(101, -1));
+        
+       for(int j = 0; j < sharks.size(); j++)
+       {
+           if(sharks[j].a == 0)
+               continue;
+               
+           
+           int cx = sharks[j].c;
+           int cy = sharks[j].r;
+           int cs = sharks[j].s;
+           
+           
+           while(cx+dx[sharks[j].d] * cs < 1 || cx+dx[sharks[j].d] * cs > C ||
+           cy+dy[sharks[j].d] * cs < 1 || cy+dy[sharks[j].d] * cs > R)
+           {
+               if(cx + dx[sharks[j].d] * cs < 1)
+               {
+                   cs = cs - (cx - 1);
+                   cx = 1;
+                   sharks[j].d = 3;
+               }
+               else if(cx + dx[sharks[j].d] * cs > C)
+               {
+                   cs = cs - (C - cx);
+                   cx = C;
+                   sharks[j].d = 4;
+               }
+               else if(cy + dy[sharks[j].d] * cs < 1)
+               {
+                   cs = cs - (cy - 1);
+                   cy = 1;
+                   sharks[j].d = 2;
+               }
+               else
+               {
+                   cs = (((cy + dy[sharks[j].d] * cs)) - R);
+                   cy = R;
+                   sharks[j].d = 1;
+               }
+           }
+           sharks[j].c = cx+dx[sharks[j].d] * cs;
+           sharks[j].r = cy+dy[sharks[j].d] * cs;
+           
+           if(map[sharks[j].r][sharks[j].c] > -1)
+           {
+               if(sharks[j].z > sharks[map[sharks[j].r][sharks[j].c]].z)
+               {
+                   sharks[map[sharks[j].r][sharks[j].c]].a = 0;
+                   map[sharks[j].r][sharks[j].c] = j;
+               }
+               else
+                   sharks[j].a = 0;
+           }
+           else
+                map[sharks[j].r][sharks[j].c] = j;
+                
+                
+           if(sharks[j].a == 1 && sharks[j].c == i+1 && (sharks[target].a == 0||target == -1 || sharks[j].r < sharks[target].r))
+                   target = j;
+       }
+   }
+   
+   cout << answer;
+   
+   
+   return 0;
 }

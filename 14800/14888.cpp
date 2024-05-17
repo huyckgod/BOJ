@@ -1,49 +1,79 @@
 #include <iostream>
 #include <algorithm>
+
 using namespace std;
-int Num[11];
-int result1=-100000000;
-int result2=100000000;
-int ope[4];
+
+int Min = 100000000000;
+int Max = -100000000000;
+
+int arr[11];
+int opr[4];
 int N;
-void OI(int a,int result){
-    if(a == N-1){
-        result1 = max(result1,result);
-        result2 = min(result2,result);
-        return;
-    }
-    if(ope[0]){
-        ope[0]--;
-        OI(a+1,result+Num[a+1]);
-        ope[0]++;
-    }
-    if(ope[1]){
-        ope[1]--;
-        OI(a+1,result-Num[a+1]);
-        ope[1]++;
-    }
-    if(ope[2]){
-        ope[2]--;
-        OI(a+1,result*Num[a+1]);
-        ope[2]++;
-    }
-    if(ope[3]){
-        ope[3]--;
-        OI(a+1,result/Num[a+1]);
-        ope[3]++;
-    }
-    return;
-}
-int main()
+
+
+void solve(int answer, int cnt)
 {
-    cin>>N;
-    for(int i = 0 ;i<N;i++){
-        cin>>Num[i];
+    if(cnt==N)
+    {
+        if(answer < Min)
+            Min = answer;
+            
+        if(answer > Max)
+            Max = answer;
     }
-    for(int i = 0 ;i<4;i++){
-        cin>>ope[i];
+    
+    if(opr[0] > 0)
+    {
+        opr[0]--;
+        solve(answer + arr[cnt], cnt+1);
+        opr[0]++;
     }
-    OI(0,Num[0]);
-    cout<<result1<<endl<<result2;
-    return 0;
+    
+    if(opr[1] > 0)
+    {
+        opr[1]--;
+        solve(answer - arr[cnt], cnt+1);
+        opr[1]++;
+    }
+    
+    if(opr[2] > 0)
+    {
+        opr[2]--;
+        solve(answer * arr[cnt], cnt+1);
+        opr[2]++;
+    }
+    
+    if(opr[3] > 0)
+    {
+        opr[3]--;
+        solve(answer / arr[cnt], cnt+1);
+        opr[3]++;
+    }
+    
+}
+
+int main() {
+
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+	
+	cin >> N;
+	
+	for(int i = 0 ; i < N;i++)
+	{
+	    cin >> arr[i];
+	}
+	for(int i = 0 ; i < 4;i++)
+	{
+	    cin >> opr[i];
+	}
+	
+	solve(arr[0], 1);
+	
+	
+	cout << Max << "\n" << Min;
+	
+	
+	
+	return 0;
 }
